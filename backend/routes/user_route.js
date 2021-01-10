@@ -23,6 +23,10 @@ router.route('/users/add').post((req, res) => {
         fines: req.body.fines,
         misc: req.body.misc,
     }
+    const newUser = new User(userToAdd);
+    newUser.save()
+        .then(() => res.json("New User Added!"))
+        .catch(err => res.status(400).json(err));
 })
 
 router.route('/users/:id').get((req, res) => {
@@ -36,3 +40,5 @@ router.route('/users/:id/update').post((req, res) => {
         .then() // TODO
         .catch(err => res.status(400).json(err));
 })
+
+module.exports = router;
