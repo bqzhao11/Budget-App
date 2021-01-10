@@ -17,7 +17,6 @@ const userSchema = new Schema({
     utilities: { type: Number, required: true },
     fines: { type: Number, required: true },
     misc: { type: Number, required: true },
-    payment_history: { type: Array, required: true },
 });
 
 const User = mongoose.model('User', userSchema)
