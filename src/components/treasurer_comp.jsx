@@ -1,11 +1,12 @@
 import React from "react";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import "../css/treasurer.css";
 
 export default class Treasurer extends React.Component {
   render() {
     return (
       <div className = "table table-striped table-hover">
-        <h1>Welcome [Treasurer]</h1>
+        <h1 className = "h1">Welcome Harsh</h1>
         
         <table className="table">
           <thead>
