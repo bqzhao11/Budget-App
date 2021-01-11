@@ -22,7 +22,7 @@ router.route('/add').post((req, res) => {
 });
 
 router.route('/:user_id').get((req, res) => {
-    Payment.findOne({ user_id: req.params.user_id })
+    Payment.find({ user_id: req.params.user_id })
         .then(payment => res.json(payment))
         .catch(err => res.status(400).json(err));
 });
