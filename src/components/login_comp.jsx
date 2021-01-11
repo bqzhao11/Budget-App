@@ -1,5 +1,8 @@
 import React from "react";
 import "../css/login.css";
+
+import LoginButton from "./login_button";
+
 export default class Treasurer extends React.Component {
   render() {
     return (
