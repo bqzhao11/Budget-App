@@ -6,7 +6,7 @@ export default class Treasurer extends React.Component {
   render() {
     return (
       <div className = "table table-striped table-hover">
-        <h1 className = "h1">Welcome Harsh</h1>
+        <h1 className = "header">Welcome Harsh</h1>
         
         <table className="table">
           <thead>
