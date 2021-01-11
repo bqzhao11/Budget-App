@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-
+import LogoutButton from "./logout_button";
 import UserInterFace from "./user_interface_comp";
 
 export default class Treasurer extends React.Component {
@@ -8,8 +8,8 @@ export default class Treasurer extends React.Component {
     super(props);
 
     this.state = {
-      first_name: "Ben",
-      gmail: "bqzhao11@gmail.com",
+      first_name: "",
+      gmail: this.props.location.state.gmail,
       chap_dues: 0,
       intl_dues: 0,
       utilities: 0,
@@ -36,7 +36,10 @@ export default class Treasurer extends React.Component {
           misc: response.data.misc,
         });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        window.location = "/login";
+      });
   }
   render() {
     return (
@@ -52,6 +55,7 @@ export default class Treasurer extends React.Component {
           Fines: {this.state.fines} <br />
           Miscellaneous: {this.state.misc} <br />
         </h3>
+        <LogoutButton />
       </div>
     );
   }
