@@ -37,7 +37,25 @@ router.route('/:id').get((req, res) => {
 
 router.route('/:id/update').post((req, res) => {
     User.findByIdAndUpdate(req.params.id)
-        .then() // TODO
+        .then(user => {
+            user.gmail = req.body.gmail;
+            user.first_name = req.body.first_name;
+            user.last_name = req.body.last_name;
+            user.role = req.body.role;
+            user.status = req.body.status;
+            user.grad_year = req.body.grad_year;
+            user.greek_class = req.body.greek_class;
+            user.venmo_username = req.body.venmo_username;
+            user.chap_dues = req.body.chap_dues;
+            user.intl_dues = req.body.intl_dues;
+            user.utilities = req.body.utilities;
+            user.fines = req.body.fines;
+            user.misc = req.body.misc;
+
+            user.save()
+                .then(() => res.json("User Updated"))
+                .catch(err => res.status(400).json(err));
+        }) // TODO
         .catch(err => res.status(400).json(err));
 })
 
