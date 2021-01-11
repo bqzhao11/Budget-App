@@ -27,4 +27,19 @@ router.route('/:user_id').get((req, res) => {
         .catch(err => res.status(400).json(err));
 });
 
+router.route('/:id/update').post((req, res) => {
+    Payment.findByIdAndUpdate(req.params.id)
+        .then(payment => {
+            payment.date = req.body.date;
+            payment.user_id = req.body.user_id;
+            payment.amount = req.body.amount;
+            payment.description = req.body.description
+
+            payment.save()
+                .then(() => res.json("Payment Updated"))
+                .catch(err => res.status(400).json(err));
+        })
+        .catch(err => res.status(400).json(err));
+})
+
 module.exports = router;
