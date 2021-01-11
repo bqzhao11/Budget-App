@@ -25,12 +25,6 @@ export default class Login extends React.Component {
       loggedIn: true,
       gmail: res.profileObj.email,
     });
-    <Redirect
-      to={{
-        pathname: "/dashboard",
-        state: { gmail: res.profileObj.email },
-      }}
-    />;
   };
 
   onFailure = (res) => {
