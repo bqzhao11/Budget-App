@@ -7,7 +7,7 @@ router.route('/').get((req, res) => {
         .catch(err => res.status(400).json(err));
 });
 
-router.route('/users/add').post((req, res) => {
+router.route('/add').post((req, res) => {
     const userToAdd = {
         gmail: req.body.gmail,
         first_name: req.body.first_name,
@@ -29,13 +29,13 @@ router.route('/users/add').post((req, res) => {
         .catch(err => res.status(400).json(err));
 })
 
-router.route('/users/:id').get((req, res) => {
+router.route('/:id').get((req, res) => {
     User.findById(req.params.id)
         .then(user => res.json(user))
         .catch(err => res.status(400).json(err));
 });
 
-router.route('/users/:id/update').post((req, res) => {
+router.route('/:id/update').post((req, res) => {
     User.findByIdAndUpdate(req.params.id)
         .then() // TODO
         .catch(err => res.status(400).json(err));
