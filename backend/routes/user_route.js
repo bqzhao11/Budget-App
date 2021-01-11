@@ -35,6 +35,13 @@ router.route('/:id').get((req, res) => {
         .catch(err => res.status(400).json(err));
 });
 
+router.route('/email/:email').get((req, res) => {
+    const reconstructedEmail = `${req.params.email}@gmail.com`;
+    User.findOne({ gmail: reconstructedEmail })
+        .then(user => res.json(user))
+        .catch(err => res.status(404).json(err));
+});
+
 router.route('/:id/update').post((req, res) => {
     User.findByIdAndUpdate(req.params.id)
         .then(user => {
