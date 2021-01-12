@@ -3,7 +3,7 @@ import axios from "axios";
 import LogoutButton from "./logout_button";
 import UserInterFace from "./user_interface_comp";
 
-export default class Treasurer extends React.Component {
+export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
 
