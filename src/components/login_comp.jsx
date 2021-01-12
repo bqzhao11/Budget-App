@@ -3,7 +3,7 @@ import "../css/login.css";
 
 import LoginButton from "./login_button";
 
-export default class Treasurer extends React.Component {
+export default class Login extends React.Component {
   render() {
     return (
       <body className="loginBody">

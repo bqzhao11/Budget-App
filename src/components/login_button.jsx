@@ -20,7 +20,6 @@ export default class Login extends React.Component {
   }
   onSuccess = (res) => {
     console.log("[Login Success] currentUser:", res.profileObj);
-    console.log(res.profileObj.email);
     this.setState({
       loggedIn: true,
       gmail: res.profileObj.email,
@@ -29,6 +28,10 @@ export default class Login extends React.Component {
 
   onFailure = (res) => {
     console.log("[Login failed] res:", res);
+    this.setState({
+      loggedIn: false,
+      gmail: "",
+    });
   };
   render() {
     return (
