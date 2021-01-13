@@ -24,13 +24,13 @@ export default class Treasurer extends React.Component {
     this.onSelectMembers = this.onSelectMembers.bind(this);
     this.onSplitChange = this.onSplitChange.bind(this);
     this.updateTable = this.updateTable.bind(this);
+    this.updateUsers = this.updateUsers.bind(this);
   }
 
   componentDidMount() {
     axios
       .get("http://localhost:5000/users/")
       .then((response) => {
-        console.log(response);
         this.setState({
           users_ids: response.data.reduce((obj, user) => {
             obj[`${user.first_name} ${user.last_name}`] = user._id;
@@ -57,7 +57,6 @@ export default class Treasurer extends React.Component {
         });
       })
       .catch((err) => console.log(err));
-    this.render();
   }
 
   userList() {
@@ -79,6 +78,7 @@ export default class Treasurer extends React.Component {
       payment_category: e.target.value,
     });
   }
+
   onAmountChange(e) {
     this.setState({
       payment_amount: e.target.value,
@@ -96,74 +96,74 @@ export default class Treasurer extends React.Component {
       payment_split: e.target.value,
     });
   }
+
+  async updateUsers(payment_amount) {
+    for (let i = 0; i < this.state.payment_members.length; i++) {
+      const current_user_id = this.state.users_ids[
+        this.state.payment_members[i]
+      ];
+      const response = await axios.get(
+        `http://localhost:5000/users/${current_user_id}`
+      );
+      const { data } = await response;
+      const updated_user = {
+        gmail: data.gmail,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        role: data.role,
+        status: data.status,
+        grad_year: data.grad_year,
+        greek_class: data.greek_class,
+        venmo_username: data.venmo_username,
+        chap_dues: data.chap_dues,
+        intl_dues: data.intl_dues,
+        utilities: data.utilities,
+        fines: data.fines,
+        misc: data.misc,
+      };
+      switch (this.state.payment_category) {
+        case "1":
+          updated_user.chap_dues += payment_amount;
+          break;
+        case "2":
+          updated_user.intl_dues += payment_amount;
+          break;
+        case "3":
+          updated_user.utilities += payment_amount;
+          break;
+        case "4":
+          updated_user.fines += payment_amount;
+          break;
+        case "5":
+          updated_user.misc += payment_amount;
+          break;
+        default:
+      }
+      const post_response = await axios.post(
+        `http://localhost:5000/users/${current_user_id}/update`,
+        updated_user
+      );
+    }
+    this.setState({
+      payment_category: "",
+      payment_amount: 0.0,
+      payment_members: [],
+      payment_split: false,
+    });
+    this.updateTable();
+  }
+
   onSubmit(e) {
     e.preventDefault();
-    console.log(this.state);
     const payment_amount = parseInt(
       this.state.payment_split
         ? this.state.payment_amount / this.state.payment_members.length
         : this.state.payment_amount
     );
-    for (let i = 0; i < this.state.payment_members.length; i++) {
-      const current_user_id = this.state.users_ids[
-        this.state.payment_members[i]
-      ];
-      axios
-        .get(`http://localhost:5000/users/${current_user_id}`)
-        .then((response) => {
-          const updated_user = {
-            gmail: response.data.gmail,
-            first_name: response.data.first_name,
-            last_name: response.data.last_name,
-            role: response.data.role,
-            status: response.data.status,
-            grad_year: response.data.grad_year,
-            greek_class: response.data.greek_class,
-            venmo_username: response.data.venmo_username,
-            chap_dues: response.data.chap_dues,
-            intl_dues: response.data.intl_dues,
-            utilities: response.data.utilities,
-            fines: response.data.fines,
-            misc: response.data.misc,
-          };
-          switch (this.state.payment_category) {
-            case "1":
-              updated_user.chap_dues += payment_amount;
-              break;
-            case "2":
-              updated_user.intl_dues += payment_amount;
-              break;
-            case "3":
-              updated_user.utilities += payment_amount;
-              break;
-            case "4":
-              updated_user.fines += payment_amount;
-              break;
-            case "5":
-              updated_user.misc += payment_amount;
-              break;
-            default:
-          }
-          axios
-            .post(
-              `http://localhost:5000/users/${current_user_id}/update`,
-              updated_user
-            )
-            .then((response) => console.log(response))
-            .catch((err) => console.log(err));
-          this.setState({
-            payment_category: "",
-            payment_amount: 0.0,
-            payment_members: [],
-            payment_split: false,
-          });
-          this.updateTable();
-        })
-        .catch((err) => console.log(err));
-    }
+    this.updateUsers(payment_amount).catch((err) => console.log(err));
   }
+
   render() {
-    // debugger;
     const dropdown_options = Object.keys(this.state.users_ids);
     const optionsArray = [];
     for (let i = 0; i < dropdown_options.length; i++) {
