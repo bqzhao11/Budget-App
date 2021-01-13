@@ -7,8 +7,44 @@ import "../css/treasurer.css";
 export default class Treasurer extends React.Component {
   constructor(props) {
     super(props);
-
+    // debugger;
     // let users_id = {};
+    // let users_array = [];
+    // async function getUsers() {
+    //   try {
+    //     const response = await axios.get("http://localhost:5000/users/");
+    //     const data = await response.json();
+    //     return data;
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+
+    // const users_data = getUsers().then((result) => console.log(result));
+    // console.log(users_data);
+    // async function f(users_id, users_array) {
+    //   try {
+    //     let response = await axios.get("http://localhost:5000/users/");
+
+    //     for (let i = 0; i < response.data.length; i++) {
+    //       let user = response.data[i];
+    //       users_id[`${user.first_name} ${user.last_name}`] = user._id;
+    //       users_array.push(user);
+    //     }
+    //     return [users_id, users_array];
+    //     // users_id = response.data.reduce((obj, user) => {
+    //     //   obj[`${user.first_name} ${user.last_name}`] = user._id;
+    //     //   return obj;
+    //     // }, {});
+    //     // users_array = response.data;
+    //   } catch (e) {
+    //     console.log(e);
+    //     throw e;
+    //   }
+    // }
+    // const users = f(users_id, users_array);
+    // users_id = users[0];
+    // users_array = users[1];
 
     // axios
     //   .get("http://localhost:5000/users/")
@@ -25,7 +61,7 @@ export default class Treasurer extends React.Component {
     //   })
     //   .catch((err) => console.log(err));
     // console.log(users_id);
-
+    // debugger;
     this.state = {
       users_ids: {},
       users_array: [],
@@ -36,27 +72,32 @@ export default class Treasurer extends React.Component {
     };
 
     // console.log(this.state.users_ids);
-    const f = async () => {
-      try {
-        let r1 = await axios.get("http://localhost:5000/users/");
-        return r1;
-      } catch (e) {
-        console.log(e);
-        throw e;
-      }
-    };
-    f()
-      .then((response) => {
-        this.state.users_ids = response.data.reduce((obj, user) => {
-          obj[`${user.first_name} ${user.last_name}`] = user._id;
-          return obj;
-        }, {});
-        this.state.users_array = response.data;
-        // console.log(this.state.users_ids);
-      })
-      .catch((err) => console.log(err));
-    console.log(this.state);
-    console.log(this.state.users_ids);
+    // const f = async () => {
+    //   try {
+    //     let response = await axios.get("http://localhost:5000/users/");
+    //     this.state.users_ids = response.data.reduce((obj, user) => {
+    //       obj[`${user.first_name} ${user.last_name}`] = user._id;
+    //       return obj;
+    //     }, {});
+    //     this.state.users_array = response.data;
+    //   } catch (e) {
+    //     console.log(e);
+    //     throw e;
+    //   }
+    // };
+    // f();
+
+    //   .then((response) => {
+    //     this.state.users_ids = response.data.reduce((obj, user) => {
+    //       obj[`${user.first_name} ${user.last_name}`] = user._id;
+    //       return obj;
+    //     }, {});
+    //     this.state.users_array = response.data;
+    //     // console.log(this.state.users_ids);
+    //   })
+    //   .catch((err) => console.log(err));
+    // console.log(this.state);
+    // console.log(this.state.users_ids);
 
     this.userList = this.userList.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -209,6 +250,9 @@ export default class Treasurer extends React.Component {
     }
   }
   render() {
+    // debugger;
+    console.log(this.state.users_ids);
+    console.log(Object.keys(this.state.users_ids));
     const dropdown_options = Object.keys(this.state.users_ids);
     // const dropdown_options = [
     //   "Ben Zhao",
@@ -272,6 +316,7 @@ export default class Treasurer extends React.Component {
           </div>
           <div className="col-auto">
             {/* {console.log(Object.keys(this.state.users_ids))} */}
+            <p>{dropdown_options}</p>
             <DropdownMultiselect
               placeholder="Members"
               options={dropdown_options}
