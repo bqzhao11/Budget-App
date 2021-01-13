@@ -145,7 +145,7 @@ export default class Treasurer extends React.Component {
       );
     }
     this.setState({
-      payment_category: "",
+      payment_category: "1",
       payment_amount: 0.0,
       payment_members: [],
       payment_split: false,
@@ -244,6 +244,7 @@ export default class Treasurer extends React.Component {
               options={optionsArray}
               handleOnChange={this.onSelectMembers}
               name="Members"
+              selected={this.state.payment_members}
             />
           </div>
           <div className="col-auto">
