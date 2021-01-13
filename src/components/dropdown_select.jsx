@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* taken and slightly modified from https://www.npmjs.com/package/react-multiselect-dropdown-bootstrap */
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -135,11 +137,7 @@ class DropdownMultiselect extends React.Component {
     } else {
       let allOptions = this.state.options;
 
-      let newSelected = [];
-
-      allOptions.map((obj) => {
-        newSelected.push(obj.key.toString());
-      });
+      let newSelected = allOptions.map((obj) => obj.key.toString());
 
       this.setState({ selected: newSelected });
       if (this.props.handleOnChange !== undefined) {

@@ -1,7 +1,6 @@
 import axios from "axios";
 import React from "react";
 import DropdownMultiselect from "./dropdown_select";
-import Select from "react-dropdown-select";
 import { UserRow } from "./user_row";
 import "../css/treasurer.css";
 
