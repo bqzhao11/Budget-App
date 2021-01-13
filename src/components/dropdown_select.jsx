@@ -23,6 +23,9 @@ class DropdownMultiselect extends React.Component {
         options: this.props.options,
       });
     }
+    if (prevProps.selected !== this.props.selected) {
+      this.setState({ selected: this.props.selected });
+    }
   }
   setSelected() {}
 
