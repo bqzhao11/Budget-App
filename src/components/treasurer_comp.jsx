@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import DropdownMultiselect from "./dropdown_select";
 import { UserRow } from "./user_row";
-import { backend_host, backend_port } from "../config.json";
+import { backend_host, backend_port, date_format } from "../config.json";
 import "../css/treasurer.css";
 
 export default class Treasurer extends React.Component {
@@ -99,8 +99,10 @@ export default class Treasurer extends React.Component {
         misc: data.misc,
       };
 
+      const date = new Date();
+
       const payment = {
-        date: Date(),
+        date: date.toLocaleTimeString("en-US", date_format).toString(),
         user_id: current_user_id,
         amount: payment_amount,
       };
