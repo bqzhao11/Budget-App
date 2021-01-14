@@ -18,8 +18,10 @@ export default class Login extends React.Component {
     this.onSuccess = this.onSuccess.bind(this);
     this.onFailure = this.onFailure.bind(this);
   }
+
   onSuccess = (res) => {
-    console.log("[Login Success] currentUser:", res.profileObj);
+    console.log("[Login Success] currentUser:", res);
+    sessionStorage.setItem("user_gmail", res.profileObj.email);
     this.setState({
       loggedIn: true,
       gmail: res.profileObj.email,
@@ -33,13 +35,12 @@ export default class Login extends React.Component {
       gmail: "",
     });
   };
+
   render() {
     return (
       <div>
         {this.state.loggedIn ? (
-          <Redirect
-            to={{ pathname: "/dashboard", state: { gmail: this.state.gmail } }}
-          />
+          <Redirect to={{ pathname: "/dashboard" }} />
         ) : (
           <GoogleLogin
             clientId={clientId}

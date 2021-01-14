@@ -6,17 +6,16 @@ import LoginButton from "./login_button";
 export default class Login extends React.Component {
   render() {
     return (
-      <body className="loginBody">
-        <main>
-          <div className="main">
-            <h1 className="sign"> Welcome </h1>
-            <LoginButton />
-            <button class="submit" align="center">
-              Sign In With Google
-            </button>
-          </div>
-        </main>
-      </body>
+      <div>
+        <div className="loginBody">
+          <main>
+            <div className="main">
+              <h1 className="sign"> Welcome </h1>
+              <LoginButton />
+            </div>
+          </main>
+        </div>
+      </div>
     );
   }
 }

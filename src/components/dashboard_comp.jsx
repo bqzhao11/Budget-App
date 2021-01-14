@@ -11,7 +11,7 @@ export default class Dashboard extends React.Component {
 
     this.state = {
       first_name: "",
-      gmail: this.props.location.state.gmail,
+      gmail: "",
       chap_dues: 0,
       intl_dues: 0,
       utilities: 0,
@@ -30,9 +30,27 @@ export default class Dashboard extends React.Component {
       `${backend_host}:${backend_port}/users/email/${truncated_gmail}`
     );
 
+    // if the logged-in user is not in the database, log out and return to login screen
+    if (response1.data === null) {
+      if (window.gapi) {
+        const auth2 = window.gapi.auth2.getAuthInstance();
+        if (auth2 != null) {
+          auth2.then(() => {
+            auth2
+              .signOut()
+              .then(() => {
+                auth2.disconnect();
+                window.location = "/login";
+              })
+              .catch((err) => console.log(err));
+          });
+        }
+      }
+    }
+
     this.setState({
       first_name: response1.data.first_name,
-      gmail: this.state.gmail,
+      gmail: response1.data.gmail,
       chap_dues: response1.data.chap_dues,
       intl_dues: response1.data.intl_dues,
       utilities: response1.data.utilities,
@@ -49,10 +67,8 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    const truncated_gmail = this.state.gmail.substring(
-      0,
-      this.state.gmail.indexOf("@")
-    );
+    const gmail = sessionStorage.getItem("user_gmail");
+    const truncated_gmail = gmail.substring(0, gmail.indexOf("@"));
     this.extractData(truncated_gmail).catch((err) => console.log(err));
   }
 
