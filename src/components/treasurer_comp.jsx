@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import DropdownMultiselect from "./dropdown_select";
 import { UserRow } from "./user_row";
-import { backend_host, backend_port } from "../config.json";
+import { backend_host, backend_port, date_format } from "../config.json";
 import "../css/treasurer.css";
 
 export default class Treasurer extends React.Component {
@@ -28,23 +28,6 @@ export default class Treasurer extends React.Component {
     this.updateUsers = this.updateUsers.bind(this);
   }
 
-  componentDidMount() {
-    axios
-      .get(`${backend_host}:${backend_port}/users/`)
-      .then((response) => {
-        this.setState({
-          users_ids: response.data.reduce((obj, user) => {
-            obj[`${user.first_name} ${user.last_name}`] = user._id;
-            return obj;
-          }, {}),
-          users_array: response.data,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   updateTable() {
     axios
       .get(`${backend_host}:${backend_port}/users/`)
@@ -60,18 +43,8 @@ export default class Treasurer extends React.Component {
       .catch((err) => console.log(err));
   }
 
-  userList() {
-    return this.state.users_array.map((user) => (
-      <UserRow
-        first_name={user.first_name}
-        last_name={user.last_name}
-        chap_dues={user.chap_dues}
-        intl_dues={user.intl_dues}
-        utilities={user.utilities}
-        fines={user.fines}
-        misc={user.misc}
-      />
-    ));
+  componentDidMount() {
+    this.updateTable();
   }
 
   onChangeCategory(e) {
@@ -126,8 +99,10 @@ export default class Treasurer extends React.Component {
         misc: data.misc,
       };
 
+      const date = new Date();
+
       const payment = {
-        date: Date(),
+        date: date.toLocaleTimeString("en-US", date_format).toString(),
         user_id: current_user_id,
         amount: payment_amount,
       };
@@ -188,6 +163,20 @@ export default class Treasurer extends React.Component {
     );
 
     this.updateUsers(payment_amount).catch((err) => console.log(err));
+  }
+
+  userList() {
+    return this.state.users_array.map((user) => (
+      <UserRow
+        first_name={user.first_name}
+        last_name={user.last_name}
+        chap_dues={user.chap_dues}
+        intl_dues={user.intl_dues}
+        utilities={user.utilities}
+        fines={user.fines}
+        misc={user.misc}
+      />
+    ));
   }
 
   render() {

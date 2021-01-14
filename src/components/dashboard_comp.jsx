@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import LogoutButton from "./logout_button";
 import UserInterFace from "./user_interface_comp";
+import ReactList from "react-list";
 import { backend_host, backend_port } from "../config.json";
 
 export default class Dashboard extends React.Component {
@@ -16,32 +17,57 @@ export default class Dashboard extends React.Component {
       utilities: 0,
       fines: 0,
       misc: 0,
+      user_id: "",
+      payments: [],
     };
+
+    this.renderItem = this.renderItem.bind(this);
+    this.extractData = this.extractData.bind(this);
   }
+
+  async extractData(truncated_gmail) {
+    const response1 = await axios.get(
+      `${backend_host}:${backend_port}/users/email/${truncated_gmail}`
+    );
+
+    this.setState({
+      first_name: response1.data.first_name,
+      gmail: this.state.gmail,
+      chap_dues: response1.data.chap_dues,
+      intl_dues: response1.data.intl_dues,
+      utilities: response1.data.utilities,
+      fines: response1.data.fines,
+      misc: response1.data.misc,
+      user_id: response1.data._id,
+    });
+
+    const response2 = await axios.get(
+      `${backend_host}:${backend_port}/payments/${this.state.user_id}`
+    );
+
+    this.setState({ payments: response2.data });
+  }
+
   componentDidMount() {
     const truncated_gmail = this.state.gmail.substring(
       0,
       this.state.gmail.indexOf("@")
     );
-    const get_route = `${backend_host}:${backend_port}/users/email/${truncated_gmail}`;
-    axios
-      .get(get_route)
-      .then((response) => {
-        this.setState({
-          first_name: response.data.first_name,
-          gmail: this.state.gmail,
-          chap_dues: response.data.chap_dues,
-          intl_dues: response.data.intl_dues,
-          utilities: response.data.utilities,
-          fines: response.data.fines,
-          misc: response.data.misc,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        window.location = "/login";
-      });
+    this.extractData(truncated_gmail).catch((err) => console.log(err));
   }
+
+  renderItem(index, key) {
+    return (
+      <div key={key}>
+        Time of Transaction: {this.state.payments[index].date}
+        <br />
+        Amount: ${this.state.payments[index].amount} <br />
+        Description: {this.state.payments[index].description} <br />
+        <hr />
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -57,6 +83,14 @@ export default class Dashboard extends React.Component {
           Miscellaneous: {this.state.misc} <br />
         </h3>
         <LogoutButton />
+        <h2>Payment History</h2>
+        <div style={{ overflow: "auto", maxHeight: 200 }}>
+          <ReactList
+            itemRenderer={this.renderItem}
+            length={this.state.payments.length}
+            type="uniform"
+          />
+        </div>
       </div>
     );
   }
