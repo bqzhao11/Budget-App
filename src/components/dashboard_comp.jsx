@@ -3,6 +3,7 @@ import axios from "axios";
 import LogoutButton from "./logout_button";
 import UserInterFace from "./user_interface_comp";
 import ReactList from "react-list";
+import { Redirect } from "react-router-dom";
 import { backend_host, backend_port } from "../config.json";
 
 export default class Dashboard extends React.Component {
@@ -18,11 +19,13 @@ export default class Dashboard extends React.Component {
       fines: 0,
       misc: 0,
       user_id: "",
+      role: "",
       payments: [],
     };
 
     this.renderItem = this.renderItem.bind(this);
     this.extractData = this.extractData.bind(this);
+    this.onTreasurerClick = this.onTreasurerClick.bind(this);
   }
 
   async extractData(truncated_gmail) {
@@ -57,7 +60,10 @@ export default class Dashboard extends React.Component {
       fines: response1.data.fines,
       misc: response1.data.misc,
       user_id: response1.data._id,
+      role: response1.data.role,
     });
+
+    sessionStorage.setItem("role", this.state.role);
 
     const response2 = await axios.get(
       `${backend_host}:${backend_port}/payments/${this.state.user_id}`
@@ -84,6 +90,10 @@ export default class Dashboard extends React.Component {
     );
   }
 
+  onTreasurerClick() {
+    window.location = "/treasurer";
+  }
+
   render() {
     return (
       <div>
@@ -107,6 +117,17 @@ export default class Dashboard extends React.Component {
             type="uniform"
           />
         </div>
+        {this.state.role === "member" ? (
+          <button
+            className="btn btn-primary"
+            onClick={this.onTreasurerClick}
+            type="button"
+          >
+            Treasurer
+          </button>
+        ) : (
+          <div></div>
+        )}
       </div>
     );
   }

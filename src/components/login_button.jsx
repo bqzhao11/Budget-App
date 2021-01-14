@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
 import { GOOGLE_CLIENT_ID } from "./../config.json";
+import { refreshTokenSetup } from "../utils/refresh_token";
 
 require("dotenv").config();
 
@@ -12,7 +13,6 @@ export default class Login extends React.Component {
     super(props);
     this.state = {
       loggedIn: false,
-      gmail: "",
     };
 
     this.onSuccess = this.onSuccess.bind(this);
@@ -20,19 +20,17 @@ export default class Login extends React.Component {
   }
 
   onSuccess = (res) => {
-    console.log("[Login Success] currentUser:", res);
     sessionStorage.setItem("user_gmail", res.profileObj.email);
     this.setState({
       loggedIn: true,
-      gmail: res.profileObj.email,
     });
+    refreshTokenSetup(res);
   };
 
   onFailure = (res) => {
     console.log("[Login failed] res:", res);
     this.setState({
       loggedIn: false,
-      gmail: "",
     });
   };
 

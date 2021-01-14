@@ -44,7 +44,11 @@ export default class Treasurer extends React.Component {
   }
 
   componentDidMount() {
-    this.updateTable();
+    if (sessionStorage.getItem("role") === "member") {
+      this.updateTable();
+    } else {
+      window.location = "/dashboard";
+    }
   }
 
   onChangeCategory(e) {
@@ -225,7 +229,10 @@ export default class Treasurer extends React.Component {
           onSubmit={this.onSubmit}
         >
           <div className="col-auto">
-            <label className="visually-hidden" for="autoSizingSelect"></label>
+            <label
+              className="visually-hidden"
+              htmlFor="autoSizingSelect"
+            ></label>
             <select
               onChange={this.onChangeCategory}
               className="dropdown-item"
@@ -242,7 +249,7 @@ export default class Treasurer extends React.Component {
           <div className="col-auto">
             <label
               className="visually-hidden"
-              for="autoSizingInputGroup"
+              htmlFor="autoSizingInputGroup"
             ></label>
             <div className="input-group">
               <div className="input-group-text">$</div>
@@ -274,7 +281,7 @@ export default class Treasurer extends React.Component {
                 id="autoSizingCheck"
                 onChange={this.onSplitChange}
               ></input>
-              <label className="form-check-label" for="autoSizingCheck">
+              <label className="form-check-label" htmlFor="autoSizingCheck">
                 Split?
               </label>
             </div>
