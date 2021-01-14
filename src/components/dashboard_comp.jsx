@@ -3,6 +3,7 @@ import axios from "axios";
 import LogoutButton from "./logout_button";
 import UserInterFace from "./user_interface_comp";
 import ReactList from "react-list";
+import { Redirect } from "react-router-dom";
 import { backend_host, backend_port } from "../config.json";
 
 export default class Dashboard extends React.Component {
@@ -11,18 +12,20 @@ export default class Dashboard extends React.Component {
 
     this.state = {
       first_name: "",
-      gmail: this.props.location.state.gmail,
+      gmail: "",
       chap_dues: 0,
       intl_dues: 0,
       utilities: 0,
       fines: 0,
       misc: 0,
       user_id: "",
+      role: "",
       payments: [],
     };
 
     this.renderItem = this.renderItem.bind(this);
     this.extractData = this.extractData.bind(this);
+    this.onTreasurerClick = this.onTreasurerClick.bind(this);
   }
 
   async extractData(truncated_gmail) {
@@ -30,16 +33,37 @@ export default class Dashboard extends React.Component {
       `${backend_host}:${backend_port}/users/email/${truncated_gmail}`
     );
 
+    // if the logged-in user is not in the database, log out and return to login screen
+    if (response1.data === null) {
+      if (window.gapi) {
+        const auth2 = window.gapi.auth2.getAuthInstance();
+        if (auth2 != null) {
+          auth2.then(() => {
+            auth2
+              .signOut()
+              .then(() => {
+                auth2.disconnect();
+                window.location = "/login";
+              })
+              .catch((err) => console.log(err));
+          });
+        }
+      }
+    }
+
     this.setState({
       first_name: response1.data.first_name,
-      gmail: this.state.gmail,
+      gmail: response1.data.gmail,
       chap_dues: response1.data.chap_dues,
       intl_dues: response1.data.intl_dues,
       utilities: response1.data.utilities,
       fines: response1.data.fines,
       misc: response1.data.misc,
       user_id: response1.data._id,
+      role: response1.data.role,
     });
+
+    sessionStorage.setItem("role", this.state.role);
 
     const response2 = await axios.get(
       `${backend_host}:${backend_port}/payments/${this.state.user_id}`
@@ -49,10 +73,8 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    const truncated_gmail = this.state.gmail.substring(
-      0,
-      this.state.gmail.indexOf("@")
-    );
+    const gmail = sessionStorage.getItem("user_gmail");
+    const truncated_gmail = gmail.substring(0, gmail.indexOf("@"));
     this.extractData(truncated_gmail).catch((err) => console.log(err));
   }
 
@@ -66,6 +88,10 @@ export default class Dashboard extends React.Component {
         <hr />
       </div>
     );
+  }
+
+  onTreasurerClick() {
+    window.location = "/treasurer";
   }
 
   render() {
@@ -91,6 +117,17 @@ export default class Dashboard extends React.Component {
             type="uniform"
           />
         </div>
+        {this.state.role === "member" ? (
+          <button
+            className="btn btn-primary"
+            onClick={this.onTreasurerClick}
+            type="button"
+          >
+            Treasurer
+          </button>
+        ) : (
+          <div></div>
+        )}
       </div>
     );
   }
