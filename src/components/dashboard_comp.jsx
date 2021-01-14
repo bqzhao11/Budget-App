@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import LogoutButton from "./logout_button";
 import UserInterFace from "./user_interface_comp";
+import { backend_host, backend_port } from "../config.json";
 
 export default class Dashboard extends React.Component {
   constructor(props) {
@@ -22,7 +23,7 @@ export default class Dashboard extends React.Component {
       0,
       this.state.gmail.indexOf("@")
     );
-    const get_route = `http://localhost:5000/users/email/${truncated_gmail}`;
+    const get_route = `${backend_host}:${backend_port}/users/email/${truncated_gmail}`;
     axios
       .get(get_route)
       .then((response) => {
