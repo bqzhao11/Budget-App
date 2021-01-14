@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import DropdownMultiselect from "./dropdown_select";
 import { UserRow } from "./user_row";
+import { backend_host, backend_port } from "../config.json";
 import "../css/treasurer.css";
 
 export default class Treasurer extends React.Component {
@@ -29,7 +30,7 @@ export default class Treasurer extends React.Component {
 
   componentDidMount() {
     axios
-      .get("http://localhost:5000/users/")
+      .get(`${backend_host}:${backend_port}/users/`)
       .then((response) => {
         this.setState({
           users_ids: response.data.reduce((obj, user) => {
@@ -46,7 +47,7 @@ export default class Treasurer extends React.Component {
 
   updateTable() {
     axios
-      .get("http://localhost:5000/users/")
+      .get(`${backend_host}:${backend_port}/users/`)
       .then((response) => {
         this.setState({
           users_ids: response.data.reduce((obj, user) => {
@@ -102,10 +103,13 @@ export default class Treasurer extends React.Component {
       const current_user_id = this.state.users_ids[
         this.state.payment_members[i]
       ];
+
       const response = await axios.get(
-        `http://localhost:5000/users/${current_user_id}`
+        `${backend_host}:${backend_port}/users/${current_user_id}`
       );
+
       const { data } = await response;
+
       const updated_user = {
         gmail: data.gmail,
         first_name: data.first_name,
@@ -121,51 +125,76 @@ export default class Treasurer extends React.Component {
         fines: data.fines,
         misc: data.misc,
       };
+
+      const payment = {
+        date: Date(),
+        user_id: current_user_id,
+        amount: payment_amount,
+      };
+
       switch (this.state.payment_category) {
         case "1":
           updated_user.chap_dues += payment_amount;
+          payment.description = "Chapter Dues";
           break;
         case "2":
           updated_user.intl_dues += payment_amount;
+          payment.description = "International Dues";
           break;
         case "3":
           updated_user.utilities += payment_amount;
+          payment.description = "Utilities";
           break;
         case "4":
           updated_user.fines += payment_amount;
+          payment.description = "Fines";
           break;
         case "5":
           updated_user.misc += payment_amount;
+          payment.description = "Miscellaneous";
           break;
         default:
       }
-      const post_response = await axios.post(
-        `http://localhost:5000/users/${current_user_id}/update`,
-        updated_user
-      );
+
+      await axios
+        .post(
+          `${backend_host}:${backend_port}/users/${current_user_id}/update`,
+          updated_user
+        )
+        .catch((err) => console.log(err));
+
+      await axios
+        .post(`${backend_host}:${backend_port}/payments/add`, payment)
+        .catch((err) => console.log(err));
     }
+
     this.setState({
       payment_category: "1",
       payment_amount: 0.0,
       payment_members: [],
       payment_split: false,
     });
+
     this.updateTable();
   }
 
   onSubmit(e) {
     e.preventDefault();
+
     const payment_amount = parseInt(
       this.state.payment_split
         ? this.state.payment_amount / this.state.payment_members.length
         : this.state.payment_amount
     );
+
     this.updateUsers(payment_amount).catch((err) => console.log(err));
   }
 
   render() {
     const dropdown_options = Object.keys(this.state.users_ids);
+
     const optionsArray = [];
+
     for (let i = 0; i < dropdown_options.length; i++) {
       optionsArray.push({
         key: dropdown_options[i],
