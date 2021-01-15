@@ -1,9 +1,7 @@
 import React from "react";
 import axios from "axios";
 import LogoutButton from "./logout_button";
-import UserInterFace from "./user_interface_comp";
 import ReactList from "react-list";
-import { Redirect } from "react-router-dom";
 import { backend_host, backend_port } from "../config.json";
 
 export default class Dashboard extends React.Component {
@@ -43,6 +41,7 @@ export default class Dashboard extends React.Component {
               .signOut()
               .then(() => {
                 auth2.disconnect();
+                sessionStorage.clear();
                 window.location = "/login";
               })
               .catch((err) => console.log(err));
@@ -62,8 +61,10 @@ export default class Dashboard extends React.Component {
       user_id: response1.data._id,
       role: response1.data.role,
     });
-
-    sessionStorage.setItem("role", this.state.role);
+    console.log(sessionStorage);
+    if (!sessionStorage.getItem("viewing_other_user")) {
+      sessionStorage.setItem("role", this.state.role);
+    }
 
     const response2 = await axios.get(
       `${backend_host}:${backend_port}/payments/${this.state.user_id}`
@@ -73,7 +74,12 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    const gmail = sessionStorage.getItem("user_gmail");
+    const field =
+      sessionStorage.getItem("role") === "treasurer" &&
+      sessionStorage.getItem("viewing_other_user")
+        ? "current_user_viewing"
+        : "user_gmail";
+    const gmail = sessionStorage.getItem(field);
     const truncated_gmail = gmail.substring(0, gmail.indexOf("@"));
     this.extractData(truncated_gmail).catch((err) => console.log(err));
   }
@@ -91,6 +97,7 @@ export default class Dashboard extends React.Component {
   }
 
   onTreasurerClick() {
+    sessionStorage.setItem("viewing_other_user", false);
     window.location = "/treasurer";
   }
 
@@ -98,7 +105,6 @@ export default class Dashboard extends React.Component {
     return (
       <div>
         <h1>This is the Dashboard Page</h1>
-        <UserInterFace />
         <h3>
           First Name: {this.state.first_name} <br />
           Gmail: {this.state.gmail} <br />
@@ -117,7 +123,7 @@ export default class Dashboard extends React.Component {
             type="uniform"
           />
         </div>
-        {this.state.role === "member" ? (
+        {sessionStorage.getItem("role") === "treasurer" ? (
           <button
             className="btn btn-primary"
             onClick={this.onTreasurerClick}

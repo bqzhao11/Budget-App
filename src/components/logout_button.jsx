@@ -18,6 +18,7 @@ export default class Logout extends React.Component {
     this.setState({
       logout: true,
     });
+    sessionStorage.clear();
   };
 
   render() {

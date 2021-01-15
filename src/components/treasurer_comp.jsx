@@ -44,7 +44,7 @@ export default class Treasurer extends React.Component {
   }
 
   componentDidMount() {
-    if (sessionStorage.getItem("role") === "member") {
+    if (sessionStorage.getItem("role") === "treasurer") {
       this.updateTable();
     } else {
       window.location = "/dashboard";
@@ -179,8 +179,13 @@ export default class Treasurer extends React.Component {
         utilities={user.utilities}
         fines={user.fines}
         misc={user.misc}
+        users_ids={this.state.users_ids}
       />
     ));
+  }
+
+  onDashboardClick() {
+    window.location = "/dashboard";
   }
 
   render() {
@@ -198,7 +203,13 @@ export default class Treasurer extends React.Component {
     return (
       <div className="table table-striped table-hover">
         <h1 className="header">Welcome Harsh</h1>
-
+        <button
+          type="button"
+          onClick={this.onDashboardClick}
+          className="btn btn-primary"
+        >
+          Back to Dashboard
+        </button>
         <table className="table">
           <thead>
             <tr>
