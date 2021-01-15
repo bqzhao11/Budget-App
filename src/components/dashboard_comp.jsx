@@ -1,9 +1,7 @@
 import React from "react";
 import axios from "axios";
 import LogoutButton from "./logout_button";
-import UserInterFace from "./user_interface_comp";
 import ReactList from "react-list";
-import { Redirect } from "react-router-dom";
 import { backend_host, backend_port } from "../config.json";
 
 export default class Dashboard extends React.Component {
@@ -98,7 +96,6 @@ export default class Dashboard extends React.Component {
     return (
       <div>
         <h1>This is the Dashboard Page</h1>
-        <UserInterFace />
         <h3>
           First Name: {this.state.first_name} <br />
           Gmail: {this.state.gmail} <br />
@@ -117,7 +114,7 @@ export default class Dashboard extends React.Component {
             type="uniform"
           />
         </div>
-        {this.state.role === "member" ? (
+        {this.state.role === "treasurer" ? (
           <button
             className="btn btn-primary"
             onClick={this.onTreasurerClick}
