@@ -179,6 +179,7 @@ export default class Treasurer extends React.Component {
         utilities={user.utilities}
         fines={user.fines}
         misc={user.misc}
+        users_ids={this.state.users_ids}
       />
     ));
   }
