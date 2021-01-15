@@ -61,7 +61,7 @@ export default class Dashboard extends React.Component {
       user_id: response1.data._id,
       role: response1.data.role,
     });
-    console.log(sessionStorage);
+
     if (!sessionStorage.getItem("viewing_other_user")) {
       sessionStorage.setItem("role", this.state.role);
     }
