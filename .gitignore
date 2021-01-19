@@ -24,4 +24,4 @@ yarn-error.log*
 
 .env
 .eslintcache
-src/config.json
+# src/config.json
