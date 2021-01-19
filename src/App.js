@@ -15,7 +15,7 @@ class App extends React.Component {
                 <div className="App">
                     <Route path="/dashboard" component={Dashboard} />
                     <Route path="/treasurer" component={Treasurer} />
-                    <Route path="/login" component={Login} />
+                    <Route path="/" component={Login} />
                 </div>
             </Router>
         );
