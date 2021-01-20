@@ -1,6 +1,6 @@
 {
   "GOOGLE_CLIENT_ID": "520525666724-ta5hubi1anr2cjugdo5omk23sqgfq2k3.apps.googleusercontent.com",
-  "backend_host": "https://45.63.76.106",
+  "backend_host": "http://45.63.76.106",
   "backend_port": "5000",
   "frontend_host": "http://localhost",
   "frontend_port": "3000",
