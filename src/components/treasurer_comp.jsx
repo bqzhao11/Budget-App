@@ -203,13 +203,6 @@ export default class Treasurer extends React.Component {
     return (
       <div className="table table-striped table-hover">
         <h1 className="header">Welcome Harsh</h1>
-        <button
-          type="button"
-          onClick={this.onDashboardClick}
-          className="btn btn-primary"
-        >
-          Back to Dashboard
-        </button>
         <table className="table">
           <thead>
             <tr>
