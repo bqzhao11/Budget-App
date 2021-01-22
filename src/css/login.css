@@ -10,7 +10,7 @@
     margin: 20px;
 } */
 
-.loginBody {
+body {
     background: linear-gradient(to right, #ccffff, #ffcccc);
     font-family: 'Ubuntu', sans-serif;
 }
